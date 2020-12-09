@@ -40,7 +40,7 @@ abstract class ActivityBase : AppCompatActivity() {
         }
     }
 
-    protected fun replaceFragment(isAdmin: Boolean, fragment: Fragment, newTag: String) {
+    protected fun replaceFragment( fragment: Fragment, newTag: String) {
         try {
             val ft = supportFragmentManager.beginTransaction()
             ft.replace(R.id.mainContainer, fragment, newTag).commit()

@@ -14,7 +14,5 @@ abstract class ServiceModule {
     @ContributesAndroidInjector
     abstract fun providerFusedLocationService(): FusedLocationService
 
-    @ContributesAndroidInjector
-    abstract fun providerUserOffTimeNotifyService(): UserOffTimeNotifyService
 
 }

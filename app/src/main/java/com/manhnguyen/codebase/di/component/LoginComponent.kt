@@ -1,7 +1,7 @@
 package com.manhnguyen.codebase.di.component
 
 import com.manhnguyen.codebase.data.api.ApiInterface
-import com.manhnguyen.codebase.presentation.login.LoginActivity
+import com.manhnguyen.codebase.presentation.login.ui.login.LoginActivity
 import dagger.Subcomponent
 import javax.inject.Scope
 

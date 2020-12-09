@@ -1,14 +1,8 @@
 package com.manhnguyen.codebase.di.module
 
-import android.content.Context
 import com.manhnguyen.codebase.BuildConfig
-import com.manhnguyen.codebase.common.Configs
-import com.manhnguyen.codebase.common.Constants
 import com.manhnguyen.codebase.data.api.ApiInterface
 import com.manhnguyen.codebase.util.JsonUtil.Companion.instance
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -180,19 +174,9 @@ class APIServiceModule() {
 
     private val siteInfoUrl: String
         get() {
-            return Configs.SERVER_INFO.SERVER_HOST
+            return "https://api.github.com"
         }
 
-    @Provides
-    @Singleton
-    fun providesGoogleSignInClient(context: Context): GoogleSignInClient {
-        val gso =
-            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(Constants.CLIEN_ID)
-                .requestEmail()
-                .build()
-        return GoogleSignIn.getClient(context, gso)
-    }
 
 
 }

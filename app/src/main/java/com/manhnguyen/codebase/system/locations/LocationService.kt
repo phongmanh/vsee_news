@@ -194,17 +194,7 @@ class LocationService : Service(), LocationListener {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        intent?.let {
-            it.action?.let { action ->
-                if (action == Constants.STOP_SERVICE) {
-                    stopForeground(true)
-                    stopSelf(primaryStartId)
-                    locationManager.removeUpdates(this)
-                    instance = null
-                }
-            }
-        }
-        primaryStartId = startId
+
         return START_NOT_STICKY
     }
 
