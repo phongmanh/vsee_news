@@ -17,13 +17,12 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import com.manhnguyen.codebase.common.Constants
-import dagger.android.AndroidInjection
-import javax.inject.Inject
+import com.manhnguyen.codebase.di.module.AppModule
+import org.koin.android.ext.android.inject
 import kotlin.properties.Delegates
 
 
-class LocationService : Service(), LocationListener {
+class LocationService constructor(private val appModule: AppModule) : Service(), LocationListener {
 
 
     private var lastLocation: Location? = null
@@ -74,15 +73,13 @@ class LocationService : Service(), LocationListener {
 
     }
 
-    @Inject
-    lateinit var locationManager: LocationManager
+    private val locationManager: LocationManager = appModule.providerLocationManager()
     private var isGPSEnabled: Boolean = false
     private var isNetworkEnabled: Boolean = false
     private val LOCATION_INTERVAL = 0L
     private val LOCATION_DISTANCE = 0f
 
-    @Inject
-    lateinit var locationViewModel: LocationViewModel
+    private val locationViewModel: LocationViewModel by inject()
 
 
     private val NOTIFICATION_ID = 12345678
@@ -98,7 +95,6 @@ class LocationService : Service(), LocationListener {
 
     override fun onCreate() {
         super.onCreate()
-        AndroidInjection.inject(this)
         startForeground()
         initService()
         instance = this

@@ -9,30 +9,26 @@ import android.os.*
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import com.manhnguyen.codebase.common.SchedulerProvider
-import com.manhnguyen.codebase.util.KalmanLatLong
 import com.google.android.gms.location.*
-import dagger.android.AndroidInjection
-import javax.inject.Inject
+import com.manhnguyen.codebase.common.SchedulerProvider
+import com.manhnguyen.codebase.di.module.AppModule
+import com.manhnguyen.codebase.util.KalmanLatLong
+import org.koin.android.ext.android.inject
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
 
-class FusedLocationService : Service() {
+class FusedLocationService constructor(private val appModule: AppModule) : Service() {
 
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
+    private val schedulerProvider: SchedulerProvider = appModule.provideSchedulerProvider()
+    private val locationViewModel: LocationViewModel by inject()
 
-    @Inject
-    lateinit var schedulerProvider: SchedulerProvider
-
-    @Inject
-    lateinit var locationViewModel: LocationViewModel
-
-    @Inject
-    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private val fusedLocationProviderClient: FusedLocationProviderClient =
+        appModule.fusedLocationProviderClient()
 
     private lateinit var activityRecognitionClient: ActivityRecognitionClient
 
@@ -266,7 +262,6 @@ class FusedLocationService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        AndroidInjection.inject(this)
         startForeground()
 
         /*requestActivityUpdate()*/

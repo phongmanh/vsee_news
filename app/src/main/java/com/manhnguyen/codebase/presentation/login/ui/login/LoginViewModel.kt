@@ -10,9 +10,9 @@ import com.manhnguyen.codebase.presentation.login.data.model.LoggedInUserView
 import com.manhnguyen.codebase.presentation.login.data.model.LoginFormState
 import com.manhnguyen.codebase.presentation.login.data.model.LoginResult
 import com.manhnguyen.codebase.presentation.login.data.model.Result
-import javax.inject.Inject
 
-class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase) : ViewModel() {
+
+class LoginViewModel constructor(private val loginUseCase: LoginUseCase) : ViewModel() {
 
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm

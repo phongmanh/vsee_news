@@ -4,17 +4,18 @@ import android.content.Context
 import androidx.room.Room
 import com.manhnguyen.codebase.data.room.databases.AppDatabase
 import com.manhnguyen.codebase.data.room.databases.DataMigration
-import dagger.Module
-import dagger.Provides
-import javax.inject.Singleton
+import org.koin.dsl.module
 
 
-@Module
-class DatabaseModule {
+class DatabaseModule constructor(private val context: Context) {
 
-    @Provides
-    @Singleton
-    fun provideDatabase(context: Context): AppDatabase {
+    companion object {
+        val databaseModule = module {
+            single { DatabaseModule(get()) }
+        }
+    }
+
+    fun provideDatabase(): AppDatabase {
         return Room.databaseBuilder(context, AppDatabase::class.java, "gpstrackingdb")
             .allowMainThreadQueries()
             .addMigrations(

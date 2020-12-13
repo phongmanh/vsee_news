@@ -2,17 +2,13 @@ package com.manhnguyen.codebase.di.module
 
 import com.manhnguyen.codebase.system.locations.FusedLocationService
 import com.manhnguyen.codebase.system.locations.LocationService
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
+import org.koin.dsl.module
 
-@Module
 abstract class ServiceModule {
-
-    @ContributesAndroidInjector
-    abstract fun providerLocationService(): LocationService
-
-    @ContributesAndroidInjector
-    abstract fun providerFusedLocationService(): FusedLocationService
-
-
+    companion object {
+        val serviceModule = module {
+            single { LocationService(get()) }
+            single { FusedLocationService(get()) }
+        }
+    }
 }

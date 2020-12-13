@@ -4,11 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.concurrent.atomic.AtomicBoolean
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class LocationViewModel @Inject constructor() : ViewModel() {
+
+class LocationViewModel : ViewModel() {
 
     private var _currentLocationData = MutableLiveData<LocationChangeEvent>()
     private var _userMoving = AtomicBoolean(false)

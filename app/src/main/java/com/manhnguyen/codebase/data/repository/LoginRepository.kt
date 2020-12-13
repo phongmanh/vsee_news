@@ -2,19 +2,20 @@ package com.manhnguyen.codebase.data.repository
 
 import com.manhnguyen.codebase.data.api.ApiInterface
 import com.manhnguyen.codebase.data.api.LoginDataSource
+import com.manhnguyen.codebase.di.module.APIServiceModule
 import com.manhnguyen.codebase.domain.usercase.login.ILoginRepository
 import com.manhnguyen.codebase.presentation.login.data.model.LoggedInUser
 import com.manhnguyen.codebase.presentation.login.data.model.Result
-import javax.inject.Inject
 
 /**
  * Class that requests authentication and user information from the remote data source and
  * maintains an in-memory cache of login status and user credentials information.
  */
 
-class LoginRepository @Inject constructor(private val apiInterface: ApiInterface) :
+class LoginRepository constructor(private val apiServiceModule: APIServiceModule) :
     ILoginRepository {
 
+    private val apiInterface: ApiInterface = apiServiceModule.aipService()
     private val dataSource = LoginDataSource()
 
     // in-memory cache of the loggedInUser object

@@ -3,33 +3,40 @@ package com.manhnguyen.codebase
 import android.annotation.SuppressLint
 import androidx.lifecycle.LifecycleObserver
 import androidx.multidex.MultiDexApplication
-import com.manhnguyen.codebase.common.SharedPreferenceHelper
-import com.manhnguyen.codebase.di.component.AppComponent
-import com.manhnguyen.codebase.di.component.DaggerAppComponent
-import com.manhnguyen.codebase.presentation.UncaughtExceptionHandler
 import com.jakewharton.threetenabp.AndroidThreeTen
-import dagger.android.*
-import javax.inject.Inject
+import com.manhnguyen.codebase.common.SharedPreferenceHelper
+import com.manhnguyen.codebase.di.module.*
+import com.manhnguyen.codebase.presentation.UncaughtExceptionHandler
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 
-class ApplicationController : MultiDexApplication(), HasAndroidInjector, LifecycleObserver {
-
-    @Inject
-    lateinit var androidInjector: DispatchingAndroidInjector<Any>
-
+class ApplicationController : MultiDexApplication(), LifecycleObserver {
 
     companion object {
         val instance by lazy { ApplicationController() }
-        lateinit var appComponent: AppComponent
     }
 
     override fun onCreate() {
         super.onCreate()
         AndroidThreeTen.init(this)
-        appComponent = DaggerAppComponent.factory().create(this)
-        appComponent.inject(this)
         Thread.setDefaultUncaughtExceptionHandler(UncaughtExceptionHandler(this))
         SharedPreferenceHelper.getInstance(this)
+        startKoin {
+            androidContext(this@ApplicationController)
+            modules(
+                listOf(
+                    ServiceModule.serviceModule,
+                    AppModule.appModule,
+                    APIServiceModule.apiModule,
+                    DatabaseModule.databaseModule,
+                    ViewModelModules.modules,
+                    RepositoryModules.modules,
+                    UseCaseModule.modules
+                )
+            )
+
+        }
         init()
     }
 
@@ -37,11 +44,7 @@ class ApplicationController : MultiDexApplication(), HasAndroidInjector, Lifecyc
     fun init() {
 
 
-
     }
 
-    override fun androidInjector(): AndroidInjector<Any> {
-        return androidInjector
-    }
 
 }

@@ -1,18 +1,17 @@
 package com.manhnguyen.codebase.presentation.main
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
 import com.manhnguyen.codebase.common.SchedulerProvider
 import com.manhnguyen.codebase.data.room.databases.AppDatabase
-import javax.inject.Inject
-import javax.inject.Singleton
+import com.manhnguyen.codebase.di.module.AppModule
+import com.manhnguyen.codebase.di.module.DatabaseModule
 
 
-@Singleton
-class MainViewModel @Inject constructor() : ViewModel() {
-    @Inject
-    lateinit var database: AppDatabase
-
-    @Inject
-    lateinit var provider: SchedulerProvider
-
+class MainViewModel(
+    private val databaseModule: DatabaseModule,
+    private val appModule: AppModule
+) :
+    ViewModel() {
+    private val database: AppDatabase = databaseModule.provideDatabase()
+    private val provider: SchedulerProvider = appModule.provideSchedulerProvider()
 }

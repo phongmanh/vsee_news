@@ -2,17 +2,14 @@ package com.manhnguyen.codebase.presentation.main
 
 import android.os.Bundle
 import androidx.lifecycle.ProcessLifecycleOwner
-
 import butterknife.BindView
 import butterknife.ButterKnife
-import com.manhnguyen.codebase.ApplicationController
-import com.manhnguyen.codebase.base.ActivityBase
-
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.manhnguyen.codebase.ApplicationController
 import com.manhnguyen.codebase.R
-
-import javax.inject.Inject
+import com.manhnguyen.codebase.base.ActivityBase
+import org.koin.android.ext.android.inject
 
 
 class MainActivity : ActivityBase() {
@@ -24,8 +21,7 @@ class MainActivity : ActivityBase() {
     lateinit var mainToolbar: MaterialToolbar
 
 
-    @Inject
-    lateinit var mainViewModel: MainViewModel
+    private val mainViewModel: MainViewModel by inject()
 
     private var itemSelected: Int = -1
     private var isInit = false
@@ -34,7 +30,6 @@ class MainActivity : ActivityBase() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         ButterKnife.bind(this)
-        ApplicationController.appComponent.inject(this)
 
         ProcessLifecycleOwner.get().lifecycle.addObserver(
             ActivityLifecycle(mainViewModel, this)

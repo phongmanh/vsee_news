@@ -2,22 +2,15 @@ package com.manhnguyen.codebase.di.module
 
 import android.content.Context
 import android.location.LocationManager
-import com.manhnguyen.codebase.common.SchedulerProvider
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import dagger.Module
-import dagger.Provides
+import com.manhnguyen.codebase.common.SchedulerProvider
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import javax.inject.Singleton
+import org.koin.dsl.module
 
-@Module(includes = [], subcomponents = [])
-class AppModule {
+class AppModule constructor(private val context: Context) {
 
-    private lateinit var locationManager: LocationManager
-
-    @Provides
-    @Singleton
     fun provideSchedulerProvider(): SchedulerProvider {
         return SchedulerProvider(
             Schedulers.io(),
@@ -28,17 +21,19 @@ class AppModule {
         )
     }
 
-    @Provides
-    @Singleton
-    fun providerLocationManager(context: Context): LocationManager {
-        locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return locationManager
+    fun providerLocationManager(): LocationManager {
+        return context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
     }
 
-    @Provides
-    @Singleton
-    fun fusedLocationProviderClient(context: Context): FusedLocationProviderClient {
+    fun fusedLocationProviderClient(): FusedLocationProviderClient {
         return LocationServices.getFusedLocationProviderClient(context)
     }
 
+    companion object {
+        val appModule = module {
+            single { AppModule(get()) }
+        }
+    }
+
 }
+

@@ -4,15 +4,12 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.manhnguyen.codebase.common.SchedulerProvider
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import com.github.pwittchen.reactivenetwork.library.rx2.internet.observing.InternetObservingSettings
-import javax.inject.Inject
-import javax.inject.Singleton
+import com.manhnguyen.codebase.common.SchedulerProvider
 
 
-@Singleton
-class NetworkViewModel @Inject constructor(private val schedulerProvider: SchedulerProvider) :
+class NetworkViewModel constructor(private val schedulerProvider: SchedulerProvider) :
     ViewModel() {
 
     private val internetConnected = MutableLiveData<Boolean>()

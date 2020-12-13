@@ -5,13 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-@Singleton
-class PowerViewModel @Inject constructor() : ViewModel() {
+
+class PowerViewModel constructor() : ViewModel() {
 
     var batteryTimeChange = ArrayList<Long>()
     var batteryPctChange = ArrayList<Int>()

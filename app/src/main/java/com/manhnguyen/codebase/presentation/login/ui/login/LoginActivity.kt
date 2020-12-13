@@ -1,10 +1,6 @@
 package com.manhnguyen.codebase.presentation.login.ui.login
 
-import android.app.Activity
-import androidx.lifecycle.Observer
 import android.os.Bundle
-import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -14,8 +10,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.activity.viewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.annotation.StringRes
+import androidx.lifecycle.Observer
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.manhnguyen.codebase.ApplicationController
@@ -23,12 +19,14 @@ import com.manhnguyen.codebase.R
 import com.manhnguyen.codebase.base.ActivityBase
 import com.manhnguyen.codebase.presentation.login.data.model.LoggedInUserView
 import com.manhnguyen.codebase.presentation.main.MainActivity
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.getViewModel
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class LoginActivity : ActivityBase() {
 
-    @Inject
-    lateinit var loginViewModel: LoginViewModel
+    /*private lateinit var  loginViewModel: LoginViewModel*/
+    private val loginViewModel: LoginViewModel by viewModel()
 
     @BindView(R.id.login)
     lateinit var login: Button
@@ -43,11 +41,11 @@ class LoginActivity : ActivityBase() {
     lateinit var loading: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        ApplicationController.appComponent.loginComponent().create().inject(this)
         super.onCreate(savedInstanceState)
         Log.e("Login", "onCreate")
         setContentView(R.layout.activity_login)
         ButterKnife.bind(this)
+        /*loginViewModel = getViewModel()*/
         init()
     }
 

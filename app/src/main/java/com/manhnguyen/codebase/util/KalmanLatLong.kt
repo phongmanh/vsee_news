@@ -1,8 +1,5 @@
 package com.manhnguyen.codebase.util
 
-import javax.inject.Singleton
-
-@Singleton
 class KalmanLatLong(private var Q_metres_per_second: Float) {
     private val MinAccuracy = 1f
     private var TimeStamp_milliseconds: Long = 0

@@ -3,13 +3,12 @@ package com.manhnguyen.codebase.di.module
 import com.manhnguyen.codebase.BuildConfig
 import com.manhnguyen.codebase.data.api.ApiInterface
 import com.manhnguyen.codebase.util.JsonUtil.Companion.instance
-import dagger.Module
-import dagger.Provides
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -20,14 +19,16 @@ import java.security.NoSuchAlgorithmException
 import java.security.SecureRandom
 import java.security.cert.CertificateException
 import java.security.cert.X509Certificate
-import javax.inject.Singleton
 import javax.net.ssl.*
 
-@Module()
-class APIServiceModule() {
+class APIServiceModule {
 
-    @Provides
-    @Singleton
+    companion object {
+        val apiModule = module {
+            single { APIServiceModule() }
+        }
+    }
+
     fun aipService(): ApiInterface {
         val okHttpClient: OkHttpClient = headersInjectedHTTPClient
         return Retrofit.Builder()
@@ -42,8 +43,6 @@ class APIServiceModule() {
             .build().create(ApiInterface::class.java)
     }
 
-    @Provides
-    @Singleton
     fun retrofitInstance(): Retrofit {
         val okHttpClient: OkHttpClient = headersInjectedHTTPClient
         return Retrofit.Builder()
@@ -58,8 +57,6 @@ class APIServiceModule() {
             .build()
     }
 
-    @Provides
-    @Singleton
     fun retrofitNoLog(): Retrofit {
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(instance.gson))
@@ -176,7 +173,6 @@ class APIServiceModule() {
         get() {
             return "https://api.github.com"
         }
-
 
 
 }
