@@ -17,17 +17,17 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import com.manhnguyen.codebase.di.module.AppModule
+import com.manhnguyen.codebase.di.AppModule
 import org.koin.android.ext.android.inject
 import kotlin.properties.Delegates
 
 
-class LocationService constructor(private val appModule: AppModule) : Service(), LocationListener {
+class LocationService constructor(appModule: AppModule) : Service(), LocationListener {
 
 
     private var lastLocation: Location? = null
 
-    override fun onLocationChanged(location: Location?) {
+    override fun onLocationChanged(location: Location) {
         /*MLocationManager.LocationChange(location)*/
 
         location?.let { newLoc ->
@@ -65,15 +65,15 @@ class LocationService constructor(private val appModule: AppModule) : Service(),
 
     }
 
-    override fun onProviderEnabled(provider: String?) {
+    override fun onProviderEnabled(provider: String) {
 
     }
 
-    override fun onProviderDisabled(provider: String?) {
+    override fun onProviderDisabled(provider: String) {
 
     }
 
-    private val locationManager: LocationManager = appModule.providerLocationManager()
+    private val locationManager: LocationManager by inject()
     private var isGPSEnabled: Boolean = false
     private var isNetworkEnabled: Boolean = false
     private val LOCATION_INTERVAL = 0L
@@ -168,7 +168,9 @@ class LocationService constructor(private val appModule: AppModule) : Service(),
             )!!
         )
 
-        locationManager.requestLocationUpdates(high.name, 0, 0f, this)
+        if (high != null) {
+            locationManager.requestLocationUpdates(high.name, 0, 0f, this)
+        }
 /*        if (isGPSEnabled) {
             locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,

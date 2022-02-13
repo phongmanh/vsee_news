@@ -135,4 +135,17 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="title_activity_maps">MovieApp</string>
+    <string name="loading">Loading</string>
+    <string name="movie_toolbar_title">Movie</string>
+    <string name="now_playing_label">Now Playing</string>
+    <string name="top_rate_label">Top Rated</string>
+    <string name="advert_label">SIMPLE ADVERTISEMENT</string>
+    <string name="error_message">There is an issue, please try again later.</string>
+    <string name="tile_message">Oops!</string>
+    <string name="permission_location_warning">Share your location to get faster, more tailored support</string>
+    <string name="search_hint">Search Here</string>
+    <string name="movie_cast_crew_title"><![CDATA[Casts & Crews]]></string>
+    <string name="movie_see_all_title">See All</string>
+    <string name="directors_label"><![CDATA[Directors: Drector1 & Drector2]]></string>
 </resources>

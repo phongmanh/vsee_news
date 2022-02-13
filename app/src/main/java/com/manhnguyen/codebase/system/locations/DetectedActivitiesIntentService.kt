@@ -15,9 +15,10 @@ class DetectedActivitiesIntentService : IntentService("DetectService") {
 
     override fun onHandleIntent(intent: Intent?) {
 
+        if (intent == null) return
         var currentActivity = DetectedActivity.UNKNOWN
         var messenger: Messenger? = null
-        val bundle = intent?.extras
+        val bundle = intent.extras
         if (bundle != null) {
             messenger = bundle.get("MESSENGER") as Messenger
         }
@@ -48,9 +49,11 @@ class DetectedActivitiesIntentService : IntentService("DetectService") {
         * */
 
         val result = ActivityRecognitionResult.extractResult(intent)
-        val probably = result.mostProbableActivity
+        val probably = result?.mostProbableActivity
         /*if (probably.confidence >= 50) {*/
+        if (probably != null) {
             currentActivity = probably.type
+        }
         /*}*/
 
         messenger?.let {

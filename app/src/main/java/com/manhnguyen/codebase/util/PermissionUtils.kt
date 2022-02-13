@@ -8,13 +8,13 @@ import androidx.annotation.NonNull
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
-import com.tbruyelle.rxpermissions2.Permission
-import com.tbruyelle.rxpermissions2.RxPermissions
+import com.tbruyelle.rxpermissions3.Permission
+import com.tbruyelle.rxpermissions3.RxPermissions
 import io.reactivex.observers.DisposableObserver
+import io.reactivex.rxjava3.core.Observer
+import io.reactivex.rxjava3.disposables.Disposable
 
 class PermissionUtils {
-
-
     companion object {
 
         fun checkSelfPermission(context: Context, type: String): Boolean {
@@ -81,7 +81,7 @@ class PermissionUtils {
                 val rxPermissions = RxPermissions(activity)
                 rxPermissions
                     .requestEach(*permissions)
-                    .subscribe(object : DisposableObserver<Permission>() {
+                    .subscribe(object : Observer<Permission> {
                         override fun onNext(@NonNull permission: Permission) {
                             if (!permission.granted) {
                                 granted[0] = false
@@ -118,6 +118,10 @@ class PermissionUtils {
                         }
 
                         override fun onComplete() {
+
+                        }
+
+                        override fun onSubscribe(d: Disposable?) {
 
                         }
                     })

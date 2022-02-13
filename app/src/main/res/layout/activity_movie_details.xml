@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable name="title" type="String" />
+        <variable name="showError" type="Boolean" />
+
+        <variable
+            name="movieDetail"
+            type="com.manhnguyen.codebase.data.model.MovieDetail.Movie" />
+
+        <import type="com.manhnguyen.codebase.util.UIUtils" />
+        <import type="android.view.View"/>
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/mainToolbar"
+            layout="@layout/toolbar_layout"
+            app:title="@{title}" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/mainToolbar">
+
+            <include
+                android:id="@+id/error_container"
+                layout="@layout/error_screen_layout"
+                android:visibility="@{(showError? View.VISIBLE : View.GONE)}" />
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/detail_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:context=".ui.movie.MovieDetailsActivity"
+                    android:visibility="@{!showError? View.VISIBLE : View.GONE}">
+
+                    <ImageView
+                        android:id="@+id/backdropImage"
+                        android:layout_width="@dimen/_150sdp"
+                        android:layout_height="@dimen/_150sdp"
+                        android:layout_marginTop="@dimen/_30sdp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        imageUrl="@{movieDetail.backdrop_pathUrl}"/>
+
+                    <View
+                        android:id="@+id/divider1"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="@dimen/_30sdp"
+                        android:background="@color/colorGrey"
+                        app:layout_constraintTop_toBottomOf="@id/backdropImage" />
+
+                    <TextView
+                        android:id="@+id/tvMovieTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/_15sdp"
+                        android:text="@{UIUtils.getDisplayDetailsTitle(movieDetail)}"
+                        android:textSize="@dimen/_10sdp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/divider1" />
+
+                    <TextView
+                        android:id="@+id/tvMovieInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/_15sdp"
+                        android:text="@{UIUtils.getDisplayDetailsSubTitle(movieDetail)}"
+                        android:textSize="@dimen/_10sdp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvMovieTitle" />
+
+                    <View
+                        android:id="@+id/divider2"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/colorGrey"
+                        app:layout_constraintTop_toBottomOf="@id/tvMovieInfo" />
+
+                    <TextView
+                        android:id="@+id/tvMovieOverview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:paddingLeft="@dimen/_15sdp"
+                        android:text="@{movieDetail.overview}"
+                        android:textSize="@dimen/_9sdp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/divider2" />
+
+                    <View
+                        android:id="@+id/divider3"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:background="@drawable/dotted_background"
+                        app:layout_constraintTop_toBottomOf="@id/tvMovieOverview" />
+
+
+                    <TextView
+                        android:id="@+id/tvMovieCastCrews"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:paddingLeft="@dimen/_15sdp"
+                        android:text="@string/movie_cast_crew_title"
+                        android:textSize="@dimen/_10sdp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/divider3" />
+
+                    <TextView
+                        android:id="@+id/tvSeeAllAction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:drawableEnd="@drawable/ic_arrow_forward_20"
+                        android:drawablePadding="@dimen/_5sdp"
+                        android:foreground="@android:drawable/list_selector_background"
+                        android:text="@string/movie_see_all_title"
+                        android:textSize="@dimen/_10sdp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="parent"
+                        app:layout_constraintHorizontal_bias="0.2"
+                        app:layout_constraintStart_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/divider3" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:cardCornerRadius="@dimen/_5sdp"
+                        app:cardElevation="@dimen/_10sdp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvMovieCastCrews">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center">
+
+                                <de.hdodenhof.circleimageview.CircleImageView
+                                    android:layout_width="@dimen/_50sdp"
+                                    android:layout_height="@dimen/_50sdp"
+                                    android:src="@drawable/ic_person_outline_black_48"
+                                    android:layout_marginEnd="@dimen/_10sdp"/>
+
+                                <de.hdodenhof.circleimageview.CircleImageView
+                                    android:layout_width="@dimen/_50sdp"
+                                    android:layout_height="@dimen/_50sdp"
+                                    android:src="@drawable/ic_person_outline_black_48"
+                                    android:layout_marginEnd="@dimen/_10sdp"/>
+
+                                <de.hdodenhof.circleimageview.CircleImageView
+                                    android:layout_width="@dimen/_50sdp"
+                                    android:layout_height="@dimen/_50sdp"
+                                    android:src="@drawable/ic_person_outline_black_48"
+                                    android:layout_marginEnd="@dimen/_10sdp"/>
+
+                                <de.hdodenhof.circleimageview.CircleImageView
+                                    android:layout_width="@dimen/_50sdp"
+                                    android:layout_height="@dimen/_50sdp"
+                                    android:src="@drawable/ic_person_outline_black_48" />
+                            </LinearLayout>
+
+                            <View
+                                android:id="@+id/divider4"
+                                android:layout_width="match_parent"
+                                android:layout_height="2dp"
+                                android:layout_marginTop="@dimen/_10sdp"
+                                android:background="@color/colorGrey" />
+
+                            <TextView
+                                android:id="@+id/tvDirectors"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="@dimen/_10sdp"
+                                android:paddingTop="@dimen/_10sdp"
+                                android:paddingBottom="@dimen/_10sdp"
+                                android:text="@string/directors_label"
+                                android:textSize="@dimen/_10sdp" />
+
+                        </LinearLayout>
+
+
+                    </androidx.cardview.widget.CardView>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+            <com.manhnguyen.codebase.ui.progressbar.ProgressDialog
+                android:id="@+id/progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+
+        </FrameLayout>
+
+    </RelativeLayout>
+
+
+</layout>

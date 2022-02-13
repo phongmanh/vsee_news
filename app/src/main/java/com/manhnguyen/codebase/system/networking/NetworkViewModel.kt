@@ -4,13 +4,13 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import com.github.pwittchen.reactivenetwork.library.rx2.internet.observing.InternetObservingSettings
 import com.manhnguyen.codebase.common.SchedulerProvider
 
 
-class NetworkViewModel constructor(private val schedulerProvider: SchedulerProvider) :
-    ViewModel() {
+class NetworkViewModel constructor(private val schedulerProvider: SchedulerProvider) : ViewModel() {
 
     private val internetConnected = MutableLiveData<Boolean>()
 
@@ -27,10 +27,10 @@ class NetworkViewModel constructor(private val schedulerProvider: SchedulerProvi
     }
 
     @SuppressLint("CheckResult")
-    fun initInternetListener() {
+    private fun initInternetListener() {
         try {
             val settings = InternetObservingSettings.builder()
-                .interval(60 * 1000)
+                .interval(1000)
                 .build()
 
             ReactiveNetwork.observeInternetConnectivity(settings)
