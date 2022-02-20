@@ -9,26 +9,34 @@ import androidx.appcompat.widget.Toolbar
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.paging.map
 import androidx.recyclerview.widget.LinearLayoutManager
 import butterknife.ButterKnife
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.manhnguyen.codebase.R
 import com.manhnguyen.codebase.data.model.MovieInfo
+import com.manhnguyen.codebase.data.model.NowPlaying
 import com.manhnguyen.codebase.data.model.Result
 import com.manhnguyen.codebase.databinding.ActivityMovieBinding
 import com.manhnguyen.codebase.system.networking.NetworkViewModel
 import com.manhnguyen.codebase.ui.ToolbarHelper
 import com.manhnguyen.codebase.ui.adapters.SimpleRecycleViewPagingAdapter
 import com.manhnguyen.codebase.ui.adapters.SimpleRecyclerAdapter
+import com.manhnguyen.codebase.ui.adapters.SimpleRecyclerPagingItem
 import com.manhnguyen.codebase.ui.adapters.movies.AdvertisementItem
 import com.manhnguyen.codebase.ui.adapters.movies.MovieItem
+import com.manhnguyen.codebase.ui.adapters.movies.MoviePagingItem
 import com.manhnguyen.codebase.ui.base.ActivityBase
 import com.manhnguyen.codebase.ui.progressbar.ProgressDialog
 import com.manhnguyen.codebase.ui.progressbar.ProgressHelper
 import com.manhnguyen.codebase.ui.viewmodels.MovieViewModel
 import kotlinx.android.synthetic.main.activity_movie.*
 import kotlinx.android.synthetic.main.toolbar_layout.view.*
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
@@ -143,6 +151,37 @@ class MovieActivity : ActivityBase(), ProgressHelper, ToolbarHelper {
         }
     }
 
+
+    private val pagingAdapter: SimpleRecycleViewPagingAdapter = SimpleRecycleViewPagingAdapter()
+    private suspend fun loadingDataPaging() {
+        rv_movie.apply {
+            setHasFixedSize(true)
+            setItemViewCacheSize(20)
+            layoutManager = LinearLayoutManager(this@MovieActivity)
+            adapter = pagingAdapter
+        }
+        showHideErrorContainer(false)
+        movieViewModel.nowPlaying(pagingAdapter)
+            .collectLatest {
+                pagingAdapter.submitData(it)
+            }
+
+        pagingAdapter.addLoadStateListener { loadState ->
+            if (loadState.source.refresh is LoadState.NotLoading) {
+                println("Empty")
+            }
+        }
+
+    }
+
+    private fun mappingItem(nowPlaying: List<MovieInfo>): PagingData<SimpleRecyclerPagingItem> {
+        val itemList = ArrayList<MoviePagingItem>()
+        nowPlaying.forEach { movieInfo ->
+            itemList.add(MoviePagingItem(movieInfo, pagingAdapter))
+        }
+        return PagingData.from(itemList)
+    }
+
     /**
      * get Now Playing data from server
      */
@@ -192,7 +231,7 @@ class MovieActivity : ActivityBase(), ProgressHelper, ToolbarHelper {
                 BottomNavigationView.OnNavigationItemSelectedListener { item ->
                     if (navItemSelected == item.itemId) return@OnNavigationItemSelectedListener true
                     when (item.itemId) {
-                        R.id.now_playing_item -> loadingNowPlayingData()
+                        R.id.now_playing_item -> lifecycleScope.launch { loadingDataPaging() }
                         R.id.top_rate_item -> loadingTopRatedData()
                     }
                     navItemSelected = item.itemId

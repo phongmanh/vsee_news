@@ -208,6 +208,7 @@ class MapsActivity : ActivityBase(), OnMapReadyCallback, ProgressHelper, Abstrac
         initializeMap(googleMap)
     }
 
+
     private fun initialize() {
         showProgressBar()
         mapFragment.getMapAsync(this)

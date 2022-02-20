@@ -20,7 +20,11 @@ import com.manhnguyen.codebase.util.KalmanLatLong
 import org.koin.android.ext.android.inject
 
 
-class FusedLocationService constructor(appModule: AppModule) : Service() {
+
+
+
+
+class FusedLocationService: Service() {
 
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
@@ -30,6 +34,9 @@ class FusedLocationService constructor(appModule: AppModule) : Service() {
     private lateinit var mNotificationManager: NotificationManager
     private lateinit var notification: Notification
     private var lastLocation: Location? = null
+    private var currentSpeed = 0.0f
+    private val real: KalmanLatLong = KalmanLatLong(3f)
+    private var isIgnored = false
 
     private fun startForeground() {
         try {
@@ -56,10 +63,6 @@ class FusedLocationService constructor(appModule: AppModule) : Service() {
 
 
     }
-
-    private var currentSpeed = 0.0f
-    private val real: KalmanLatLong = KalmanLatLong(3f)
-    private var isIgnored = false
 
     override fun onCreate() {
         super.onCreate()
@@ -133,26 +136,17 @@ class FusedLocationService constructor(appModule: AppModule) : Service() {
                     }
                 }
             }
+        }
 
-            override fun onLocationAvailability(p0: LocationAvailability) {
-                super.onLocationAvailability(p0)
-            }
-        }
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
         fusedLocationProviderClient.requestLocationUpdates(
             locationRequest,
             locationCallback,
             Looper.myLooper()!!
         )
+
+    }
+
+    private fun initLocationRequest(){
 
     }
 

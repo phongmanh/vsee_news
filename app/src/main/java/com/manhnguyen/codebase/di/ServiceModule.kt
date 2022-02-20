@@ -7,8 +7,8 @@ import org.koin.dsl.module
 abstract class ServiceModule {
     companion object {
         val serviceModule = module {
-            single { LocationService(get()) }
-            single { FusedLocationService(get()) }
+            single { LocationService() }
+            single { FusedLocationService() }
         }
     }
 }

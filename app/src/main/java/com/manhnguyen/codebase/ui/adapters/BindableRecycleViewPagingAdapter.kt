@@ -7,8 +7,8 @@ import androidx.databinding.ViewDataBinding
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 
-abstract class BindableRecycleViewPagingAdapter(diffCallback: DiffUtil.ItemCallback<SimpleRecyclerItem>) :
-    PagingDataAdapter<SimpleRecyclerItem, BindableViewHolder>(diffCallback) {
+abstract class BindableRecycleViewPagingAdapter(diffCallback: DiffUtil.ItemCallback<SimpleRecyclerPagingItem>) :
+    PagingDataAdapter<SimpleRecyclerPagingItem, BindableViewHolder>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindableViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -23,7 +23,7 @@ abstract class BindableRecycleViewPagingAdapter(diffCallback: DiffUtil.ItemCallb
 
     override fun onBindViewHolder(holder: BindableViewHolder, position: Int) {
         val item = getViewItem(position)
-        holder.bind(item)
+        item.let { holder.bind(item) }
     }
 
     override fun getItemViewType(position: Int): Int {

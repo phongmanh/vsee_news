@@ -1,31 +1,28 @@
 package com.manhnguyen.codebase.ui.adapters
 
+import android.annotation.SuppressLint
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
 
 class SimpleRecycleViewPagingAdapter: BindableRecycleViewPagingAdapter(ITEM_COMPARATOR) {
 
-    private var items: MutableList<SimpleRecyclerItem> = mutableListOf()
-    private val viewTypeAndHolder: MutableMap<Int, (binding: ViewDataBinding) -> BindableViewHolder> =
+    private var items: MutableList<SimpleRecyclerPagingItem> = mutableListOf()
+    val viewTypeAndHolder: MutableMap<Int, (binding: ViewDataBinding) -> BindableViewHolder> =
         mutableMapOf()
 
     override fun getViewItem(position: Int): Any {
-        return items[position]
+        return getItem(position)!!
     }
 
     override fun getLayout(position: Int): Int {
-        return items[position].getLayout()
+        return getItem(position)!!.getLayout()
     }
 
     override fun getViewHolder(binding: ViewDataBinding, viewType: Int): BindableViewHolder? {
         return viewTypeAndHolder[viewType]?.invoke(binding)
     }
 
-    override fun getItemCount(): Int {
-        return items.size
-    }
-
-    open fun setItems(items: List<SimpleRecyclerItem>) {
+    open fun setItems(items: List<SimpleRecyclerPagingItem>) {
         this.items = items.toMutableList()
         items.forEach {
             viewTypeAndHolder[it.getViewType()] = it.getViewHolderProvider()
@@ -33,7 +30,7 @@ class SimpleRecycleViewPagingAdapter: BindableRecycleViewPagingAdapter(ITEM_COMP
         notifyDataSetChanged()
     }
 
-    open fun setItem(item: SimpleRecyclerItem, index: Int) {
+    open fun setItem(item: SimpleRecyclerPagingItem, index: Int) {
         this.items.add(index, item)
         viewTypeAndHolder[item.getViewType()] = item.getViewHolderProvider()
         notifyDataSetChanged()
@@ -42,13 +39,14 @@ class SimpleRecycleViewPagingAdapter: BindableRecycleViewPagingAdapter(ITEM_COMP
 
     companion object {
         val ITEM_COMPARATOR = object :
-            DiffUtil.ItemCallback<SimpleRecyclerItem>() {
-            override fun areItemsTheSame( oldItem: SimpleRecyclerItem, newItem: SimpleRecyclerItem ): Boolean {
-               return oldItem.getViewType() == newItem.getViewType()
+            DiffUtil.ItemCallback<SimpleRecyclerPagingItem>() {
+            override fun areItemsTheSame( oldItem: SimpleRecyclerPagingItem, newItem: SimpleRecyclerPagingItem ): Boolean {
+               return oldItem.getItemDataId() == newItem.getItemDataId()
             }
 
-            override fun areContentsTheSame( oldItem: SimpleRecyclerItem, newItem: SimpleRecyclerItem ): Boolean {
-                return oldItem.equals(newItem)
+            @SuppressLint("DiffUtilEquals")
+            override fun areContentsTheSame(oldItem: SimpleRecyclerPagingItem, newItem: SimpleRecyclerPagingItem ): Boolean {
+                return oldItem.getItemData().equals(newItem.getItemData())
             }
 
         }

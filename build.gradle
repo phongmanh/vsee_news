@@ -9,7 +9,7 @@ buildscript {
         rxandroid = "3.0.0"
         dagger = "2.24"
         room_version = "2.4.1"
-        kotlin_version = '1.5.31'
+        kotlin_version = '1.6.10'
         koin_version= "3.1.5"
         okhttpLoggingInterceptorVersion = '4.9.0'
     }

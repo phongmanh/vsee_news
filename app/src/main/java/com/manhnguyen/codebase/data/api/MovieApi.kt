@@ -17,7 +17,7 @@ interface MovieApi {
     suspend fun getTopRatePaging(@Query("page") page: Int): MovieInfoResponse
 
     @GET("now_playing")
-    suspend fun getNowPlayingPaing(@Query("page") page: Int): MovieInfoResponse
+    suspend fun getNowPlayingPaging(@Query("page") page: Int): NowPlaying
 
     @GET("top_rated")
     suspend fun getTopRate(@Query("page") page: Int): TopRate

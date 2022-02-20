@@ -22,7 +22,7 @@ import org.koin.android.ext.android.inject
 import kotlin.properties.Delegates
 
 
-class LocationService constructor(appModule: AppModule) : Service(), LocationListener {
+class LocationService: Service(), LocationListener {
 
 
     private var lastLocation: Location? = null
