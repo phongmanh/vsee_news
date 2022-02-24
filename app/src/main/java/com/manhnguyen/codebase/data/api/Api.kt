@@ -23,12 +23,15 @@ class Api constructor(private val context: Context) {
     private lateinit var baseUrl: String
     private lateinit var movieBaseUrl: String
     private lateinit var googleMapsUrl: String
+    lateinit var songApi: SongApi
+
     var imagePosterBaseUrl: String = ""
     var imageBackDropBaseUrl: String = ""
     init {
         initializeUrls()
         configApi = apiBuilder(baseUrl, ConfigApi::class.java)
         movieApi = apiBuilder(movieBaseUrl, MovieApi::class.java)
+        songApi = apiBuilder("", SongApi::class.java)
     }
 
     private fun initializeUrls() {

@@ -29,6 +29,6 @@ interface MovieApi {
     suspend fun getDetail(@Path("movie_id") movie_id: Int): MovieDetail.Movie
 
     @GET("{movie_id}?")
-    fun getDetails(@Path("movie_id") movie_id: Int): Call<ResponseBody>
+    fun getDetails(@Path("movie_id") movie_id: Int): Response<MovieDetail.Movie>
 
 }

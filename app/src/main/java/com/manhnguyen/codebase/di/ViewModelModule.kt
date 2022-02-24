@@ -12,7 +12,7 @@ class ViewModelModule {
     companion object {
         val modules = module {
             viewModel { LocationViewModel() }
-            viewModel { MapsViewModel(get(), get()) }
+            viewModel { MapsViewModel(get(), get(), get()) }
             viewModel { MovieViewModel(get(), get()) }
             viewModel { NetworkViewModel(get()) }
         }

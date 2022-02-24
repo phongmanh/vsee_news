@@ -8,14 +8,35 @@ import androidx.annotation.NonNull
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.tbruyelle.rxpermissions3.Permission
 import com.tbruyelle.rxpermissions3.RxPermissions
-import io.reactivex.observers.DisposableObserver
 import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.disposables.Disposable
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.callbackFlow
 
 class PermissionUtils {
+
     companion object {
+
+        val LOCATION_PERMISSIONS = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            arrayListOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            )
+        } else {
+            arrayListOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        }
 
         fun checkSelfPermission(context: Context, type: String): Boolean {
             if (ContextCompat.checkSelfPermission(
@@ -29,22 +50,18 @@ class PermissionUtils {
 
         fun locationPermission(context: Context): Boolean {
             try {
-                val backgroundLocation: Boolean
                 val locationStatus = checkSelfPermission(
-                    context,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                    context,Manifest.permission.ACCESS_FINE_LOCATION
                 ) && checkSelfPermission(
-                    context,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                    context,Manifest.permission.ACCESS_COARSE_LOCATION
                 )
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    backgroundLocation = PermissionUtils.checkSelfPermission(
-                        context,
-                        android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                val backgroundLocation: Boolean = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    checkSelfPermission(
+                        context,Manifest.permission.ACCESS_BACKGROUND_LOCATION
                     )
                 } else {
                     /*Auto grant*/
-                    backgroundLocation = true
+                    true
                 }
 
                 return locationStatus && backgroundLocation
@@ -67,11 +84,11 @@ class PermissionUtils {
 
         fun requestPermission(
             activity: FragmentActivity,
-            permissions: Array<String>?,
+            permissions: ArrayList<String>,
             resultHandler: PermissionResultHandler
         ) {
 
-            if (permissions != null && permissions.isNotEmpty()) {
+            if (permissions.isNotEmpty()) {
                 val i = intArrayOf(0)
                 val granted = booleanArrayOf(true)
                 val hasRationale = booleanArrayOf(false)
@@ -80,7 +97,7 @@ class PermissionUtils {
 
                 val rxPermissions = RxPermissions(activity)
                 rxPermissions
-                    .requestEach(*permissions)
+                    .requestEach(*permissions.toTypedArray())
                     .subscribe(object : Observer<Permission> {
                         override fun onNext(@NonNull permission: Permission) {
                             if (!permission.granted) {
@@ -128,24 +145,43 @@ class PermissionUtils {
             }
         }
 
-    }
+        @ExperimentalCoroutinesApi
+        fun dexterRequestPermissions(context: Context, permissions: List<String>) = callbackFlow {
+            val listener = object : MultiplePermissionsListener {
+                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                    report?.let {
+                        if (report.areAllPermissionsGranted()) {
+                            this@callbackFlow.trySend(true).isSuccess
+                        }
+                    }
+                }
 
-    class PermissionRequestResult {
-        var permissionName: String = ""
-        var isGranted: Boolean = false
-        var isWontAskAgain: Boolean = false
+                override fun onPermissionRationaleShouldBeShown(
+                    requests: MutableList<PermissionRequest>?,
+                    token: PermissionToken?
+                ) {
+                    token?.continuePermissionRequest()
+                }
+            }
+            Dexter.withContext(context).withPermissions(permissions)
+                .withListener(listener).check()
 
-        constructor(permissionName: String, isGranted: Boolean, isWontAskAgain: Boolean) {
-            this.permissionName = permissionName
-            this.isGranted = isGranted
-            this.isWontAskAgain = isWontAskAgain
+            awaitClose()
         }
+
     }
+
+    class PermissionRequestResult(
+        var permissionName: String,
+        var isGranted: Boolean,
+        var isWontAskAgain: Boolean
+    )
 
     interface PermissionResultHandler {
         fun onGranted(results: Array<PermissionRequestResult?>)
         fun onDenied(results: Array<PermissionRequestResult?>)
         fun onDeniedForever(results: Array<PermissionRequestResult?>)
     }
+
 
 }

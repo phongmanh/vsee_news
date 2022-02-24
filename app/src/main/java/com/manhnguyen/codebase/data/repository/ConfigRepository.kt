@@ -8,9 +8,7 @@ import com.manhnguyen.codebase.data.model.ResponseError
 import com.manhnguyen.codebase.data.model.Result
 import com.manhnguyen.codebase.data.room.dao.ConfigDao
 import com.manhnguyen.codebase.data.room.databases.AppDatabase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,31 +19,26 @@ import kotlin.coroutines.suspendCoroutine
 class ConfigRepository constructor(private val db: AppDatabase, private val api: Api) {
 
     private var configDao: ConfigDao = db.configDao()
-    private val scope = CoroutineScope(Dispatchers.IO)
-    suspend fun fetchConfig() = suspendCoroutine<Result<Any>> { continuation ->
-        try {
-            api.configApi.fetchConfig().enqueue(object : Callback<Configuration> {
-                override fun onResponse(
-                    call: Call<Configuration>,
-                    response: Response<Configuration>
-                ) {
-                    if (response.isSuccessful && response.body() != null){
+
+    suspend fun fetchConfig() = withContext(Dispatchers.IO) {
+        suspendCoroutine<Result<Any>> { continuation ->
+            try {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val response = api.configApi.fetchConfig()
+                    if (response.isSuccessful) {
                         configDao.insertOrUpdate(response.body()!!)
                         continuation.resume(Result.Success(true))
                     } else {
-                        val result : ResponseError = Gson().fromJson(response.errorBody()!!.string(), object : TypeToken<ResponseError>(){}.type)
+                        val result: ResponseError = Gson().fromJson(
+                            response.errorBody()!!.string(),
+                            object : TypeToken<ResponseError>() {}.type
+                        )
                         continuation.resume(Result.Error(result))
                     }
-
                 }
-
-                override fun onFailure(call: Call<Configuration>, t: Throwable) {
-                    continuation.resume(handleException(t))
-                }
-            })
-
-        } catch (e: Exception) {
-            continuation.resume(handleException(e))
+            } catch (e: Exception) {
+                continuation.resume(handleException(e))
+            }
         }
     }
 

@@ -1,16 +1,14 @@
 package com.manhnguyen.codebase.ui.map
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.location.LocationManager
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.view.Window
-import android.widget.Toast
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import butterknife.ButterKnife
 import butterknife.OnClick
@@ -20,7 +18,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_INDEFINITE
 import com.google.android.material.snackbar.Snackbar
 import com.manhnguyen.codebase.R
@@ -38,10 +35,8 @@ import com.manhnguyen.codebase.util.PermissionUtils
 import kotlinx.android.synthetic.main.activity_maps.*
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
-import android.view.Gravity
 import com.google.android.gms.maps.model.LatLng
-import com.manhnguyen.codebase.util.GoogleMapsUtils
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 
 
@@ -122,37 +117,17 @@ class MapsActivity : ActivityBase(), OnMapReadyCallback, ProgressHelper, Abstrac
         }
     }
 
+    @ExperimentalCoroutinesApi
     private fun requestPermission() {
-        val permissionArrayList: Array<String> =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                )
+
+        mapsViewModel.requestLocationPermission(this).observe(this, { granted ->
+            if (granted) {
+                showHideMapsFeatures(true)
+                locationEnabledChecking()
             } else {
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
+                handlePermissionDenied()
             }
-
-        PermissionUtils.requestPermission(this,
-            permissionArrayList,
-            object : PermissionUtils.PermissionResultHandler {
-                override fun onGranted(results: Array<PermissionUtils.PermissionRequestResult?>) {
-                    showHideMapsFeatures(true)
-                    locationEnabledChecking()
-                }
-
-                override fun onDenied(results: Array<PermissionUtils.PermissionRequestResult?>) {
-                    handlePermissionDenied()
-                }
-
-                override fun onDeniedForever(results: Array<PermissionUtils.PermissionRequestResult?>) {
-                    handlePermissionDenied()
-                }
-            })
+        })
     }
 
     /**

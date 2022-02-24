@@ -5,6 +5,9 @@ import com.google.gson.reflect.TypeToken
 import com.manhnguyen.codebase.data.api.Api
 import com.manhnguyen.codebase.data.model.MovieDetail
 import com.manhnguyen.codebase.data.model.MovieInfo
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -25,25 +28,15 @@ class MovieRepository constructor(private val api: Api) {
 
     suspend fun getDetails(movieId: Int) = suspendCoroutine<MovieDetail.Movie> { cont ->
         try {
-            api.movieApi.getDetails(movieId).enqueue(object : Callback<ResponseBody> {
-                override fun onResponse(
-                    call: Call<ResponseBody>,
-                    response: Response<ResponseBody>
-                ) {
-                    if (response.isSuccessful) {
-                        response.body()?.let { responseBody ->
-                            val movieInfo: MovieInfo = Gson().fromJson(responseBody.string(), object : TypeToken<MovieInfo>(){}.type)
-                            val movie: MovieDetail.Movie = Gson().fromJson(responseBody.string(), object : TypeToken<MovieDetail.Movie>(){}.type)
-                            cont.resume(movie)
-                        }
-                    }
+            CoroutineScope(Dispatchers.IO).launch {
+                val response = api.movieApi.getDetails(movieId)
+                if (response.isSuccessful) {
+                    cont.resume(response.body()!!)
+                } else {
+                    cont.resumeWithException(Throwable("Empty"))
                 }
-
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    cont.resumeWithException(t)
-                }
-            })
-        }catch (e: Exception){
+            }
+        } catch (e: Throwable) {
             cont.resumeWithException(e)
         }
     }

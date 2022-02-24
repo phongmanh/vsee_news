@@ -43,7 +43,7 @@ android {
     defaultConfig {
         applicationId "com.manhnguyen.codebase"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
 
@@ -133,14 +133,17 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.2.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.2.2'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
-    implementation('androidx.lifecycle:lifecycle-runtime-ktx:2.4.0')
-    implementation('androidx.lifecycle:lifecycle-livedata-ktx:2.4.0')
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation "androidx.paging:paging-runtime-ktx:3.1.0"
     implementation "androidx.paging:paging-rxjava2-ktx:3.1.0"
 
+    // Lifecycle components
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
+    implementation('androidx.lifecycle:lifecycle-runtime-ktx:2.4.0')
+    implementation('androidx.lifecycle:lifecycle-livedata-ktx:2.4.0')
+
+    // Room components
     implementation "androidx.room:room-runtime:$project.room_version"
     kapt "androidx.room:room-compiler:$project.room_version"
     implementation "androidx.room:room-ktx:$project.room_version"
@@ -160,6 +163,7 @@ dependencies {
     implementation 'com.google.maps.android:android-maps-utils:1.3.3'
     implementation 'com.google.maps:google-maps-services:0.1.18'
     implementation 'org.slf4j:slf4j-simple:1.7.25'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0'
 
     //retrofit
 
@@ -197,5 +201,5 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.3.1'
-
+    implementation 'com.karumi:dexter:6.2.3'
 }

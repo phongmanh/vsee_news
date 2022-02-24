@@ -1,11 +1,7 @@
 package com.manhnguyen.codebase
 
-import com.manhnguyen.codebase.testing.CallSingleton
-import com.manhnguyen.codebase.testing.SingletonClass
+import org.junit.Assert.assertEquals
 import org.junit.Test
-
-import org.junit.Assert.*
-import java.lang.Exception
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -18,16 +14,6 @@ class ExampleUnitTest {
         assertEquals(4, 2 + 2)
     }
 
-    @Test
-    fun singletonCls() {
-
-        val callSingleton = CallSingleton()
-        assertEquals(1, SingletonClass.instance.intVar)
-        callSingleton.increase()
-        assertEquals(2, SingletonClass.instance.intVar)
-
-
-    }
 
     @Test
     fun return_Finally() {
