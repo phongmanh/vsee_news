@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable name="title" type="String" />
+        <variable name="showError" type="Boolean" />
+
+        <variable
+            name="newsDetail"
+            type="com.manhnguyen.codebase.data.model.News" />
+
+        <import type="com.manhnguyen.codebase.util.UIUtils" />
+        <import type="android.view.View"/>
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/mainToolbar"
+            layout="@layout/toolbar_layout"
+            app:title="@{title}" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/mainToolbar">
+
+            <include
+                android:id="@+id/error_container"
+                layout="@layout/error_screen_layout"
+                android:visibility="@{(showError? View.VISIBLE : View.GONE)}" />
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/detail_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:context=".ui.movie.NewsDetailsActivity"
+                    android:visibility="@{!showError? View.VISIBLE : View.GONE}">
+
+                    <ImageView
+                        android:id="@+id/backdropImage"
+                        imageUrl="@{newsDetail.article.urlToImage}"
+                        android:layout_width="@dimen/_280sdp"
+                        android:layout_height="@dimen/_150sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <View
+                        android:id="@+id/divider1"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:background="@color/colorGrey"
+                        app:layout_constraintTop_toBottomOf="@id/backdropImage" />
+
+                    <TextView
+                        android:id="@+id/tvMovieTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/_15sdp"
+                        android:textSize="@dimen/_10sdp"
+                        android:textStyle="bold"
+                        android:text="@{newsDetail.article.title}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/divider1" />
+
+                    <TextView
+                        android:id="@+id/tvMovieInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/_15sdp"
+                        android:textSize="@dimen/_10sdp"
+                        android:text="@{newsDetail.article.description}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvMovieTitle" />
+                    <View
+                        android:id="@+id/divider2"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/colorGrey"
+                        app:layout_constraintTop_toBottomOf="@id/tvMovieInfo" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+            <com.manhnguyen.codebase.ui.progressbar.ProgressDialog
+                android:id="@+id/progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+
+        </FrameLayout>
+
+    </RelativeLayout>
+
+
+</layout>

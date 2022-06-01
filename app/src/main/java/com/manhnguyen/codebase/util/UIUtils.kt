@@ -1,44 +1,27 @@
 package com.manhnguyen.codebase.util
 
-import com.manhnguyen.codebase.data.model.MovieDetail
-import com.manhnguyen.codebase.data.model.MovieInfo
-import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneId
+import org.threeten.bp.format.DateTimeFormatter
+import java.text.SimpleDateFormat
+import java.util.*
 
 object UIUtils {
     @JvmStatic
     fun numberToString(n: Any): String = "$n"
 
     @JvmStatic
-    fun getDisplayDetailsTitle(info: MovieDetail.Movie?): String = "${info?.title}(${getDisplayYearOfDate(info?.release_date)})"
+    fun getDisplayYearOfDate(strDate: String?): String = ""
 
     @JvmStatic
-    fun getDisplayDetailsSubTitle(movie: MovieDetail.Movie?): String {
-        var genres = ""
-        movie?.genres?.forEach {
-            genres = if (genres == "")
-                genres.plus(it.name)
-            else
-                genres.plus(", ${it.name}")
-        }
+    fun getDisplayDateTime(strDate: String): String {
 
-        var duration = ""
-        movie?.runtime?.let {
-            var strHour = ""
-            var strMin = ""
-            if (it >= 60) {
-                strHour = "${it / 60}h"
-                val min = it - ((it / 60) * 60)
-                if (min > 0)
-                    strMin = "${min}m"
+        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+        sdf.timeZone = TimeZone.getTimeZone("UTC")
 
-                duration = strHour.plus(strMin)
-            } else {
-                duration = "${it}m"
-            }
-        }
-        return "${movie?.vote_average}/10 | $duration | $genres"
+        val dateTime = sdf.parse(strDate)
+        val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+        return simpleDateFormat.format(dateTime)
     }
 
-    @JvmStatic
-    fun getDisplayYearOfDate(strDate: String?): String = "${strDate?.let{LocalDate.parse(strDate).year}}"
 }

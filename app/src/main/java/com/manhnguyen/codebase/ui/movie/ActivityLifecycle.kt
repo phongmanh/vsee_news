@@ -5,7 +5,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 
-class ActivityLifecycle(val activity: MovieActivity) :
+class ActivityLifecycle(val activity: NewsActivity) :
     LifecycleObserver {
 
     private var resumed = 0

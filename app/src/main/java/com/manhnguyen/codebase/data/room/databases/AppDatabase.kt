@@ -6,19 +6,18 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.manhnguyen.codebase.data.converters.DateConverter
-import com.manhnguyen.codebase.data.converters.EntityConverters
 import com.manhnguyen.codebase.data.converters.IntListConverter
+import com.manhnguyen.codebase.data.converters.ModelConverter
 import com.manhnguyen.codebase.data.converters.StringListConverter
-import com.manhnguyen.codebase.data.room.dao.ConfigDao
-import com.manhnguyen.codebase.data.room.dao.MovieDAO
-import com.manhnguyen.codebase.data.room.dao.NowPlayingDao
-import com.manhnguyen.codebase.data.room.dao.TopRateDao
+import com.manhnguyen.codebase.data.model.News
+import com.manhnguyen.codebase.data.model.RemoteKeys
+import com.manhnguyen.codebase.data.room.dao.NewsDAO
+import com.manhnguyen.codebase.data.room.dao.RemoteKeysDAO
 import com.manhnguyen.codebase.data.room.databases.AppDatabase.Companion.DB_VERSION
-import com.manhnguyen.codebase.data.model.*
 
 
 @Database(
-    entities = [MovieDetail.Movie::class, NowPlaying::class, Configuration::class, TopRate::class],
+    entities = [News::class, RemoteKeys::class],
     version = DB_VERSION,
     exportSchema = false
 )
@@ -26,20 +25,15 @@ import com.manhnguyen.codebase.data.model.*
     StringListConverter::class,
     IntListConverter::class,
     DateConverter::class,
-    EntityConverters::class
+    ModelConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun movieDao(): MovieDAO
-
-    abstract fun nowPlayingDao(): NowPlayingDao
-
-    abstract fun topRateDao(): TopRateDao
-
-    abstract fun configDao(): ConfigDao
+    abstract fun newsDao(): NewsDAO
+    abstract fun remoteKeysDao(): RemoteKeysDAO
 
     companion object : SingletonProvider<AppDatabase, Context> {
-        const val DB_NAME = "movie_database"
+        const val DB_NAME = "news_database"
         const val DB_VERSION = 1
         override val singletonInstance = SingletonInstance<AppDatabase, Context> {
             Room.databaseBuilder(it.applicationContext, AppDatabase::class.java, DB_NAME)

@@ -1,8 +1,8 @@
 package com.manhnguyen.codebase.data.api
 
 import android.content.Context
+import com.kwabenaberko.newsapilib.NewsApiClient
 import com.manhnguyen.codebase.BuildConfig
-import com.manhnguyen.codebase.data.model.Configuration
 import com.manhnguyen.codebase.util.JsonUtil
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
@@ -18,31 +18,16 @@ import java.security.cert.X509Certificate
 import javax.net.ssl.*
 
 class Api constructor(private val context: Context) {
-    var movieApi: MovieApi
-    var configApi: ConfigApi
-    private lateinit var baseUrl: String
-    private lateinit var movieBaseUrl: String
-    private lateinit var googleMapsUrl: String
-    lateinit var songApi: SongApi
+    lateinit var newsApiClient: NewsApiClient
 
     var imagePosterBaseUrl: String = ""
     var imageBackDropBaseUrl: String = ""
     init {
         initializeUrls()
-        configApi = apiBuilder(baseUrl, ConfigApi::class.java)
-        movieApi = apiBuilder(movieBaseUrl, MovieApi::class.java)
-        songApi = apiBuilder("", SongApi::class.java)
     }
 
     private fun initializeUrls() {
-        baseUrl = "https://api.themoviedb.org/3/"
-        movieBaseUrl = "https://api.themoviedb.org/3/movie/"
-        googleMapsUrl = "https://maps.googleapis.com/maps/api/directions"
-    }
-
-    fun initializeImageUrl(config: Configuration) {
-        imagePosterBaseUrl = "${config.images.secure_base_url}/${config.images.poster_sizes[0]}"
-        imageBackDropBaseUrl = "${config.images.secure_base_url}/${config.images.backdrop_sizes[0]}"
+        newsApiClient = NewsApiClient(BuildConfig.API_KEY)
     }
 
     private fun <T> apiBuilder(baseUrl: String, apiClass: Class<T>): T {

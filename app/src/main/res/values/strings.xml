@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Codebase</string>
+    <string name="app_name">News</string>
     <string name="title_activity_login">LoginActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -137,7 +137,7 @@
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_maps">MovieApp</string>
     <string name="loading">Loading</string>
-    <string name="movie_toolbar_title">Movie</string>
+    <string name="movie_toolbar_title">Details</string>
     <string name="now_playing_label">Now Playing</string>
     <string name="top_rate_label">Top Rated</string>
     <string name="advert_label">SIMPLE ADVERTISEMENT</string>
@@ -148,4 +148,5 @@
     <string name="movie_cast_crew_title"><![CDATA[Casts & Crews]]></string>
     <string name="movie_see_all_title">See All</string>
     <string name="directors_label"><![CDATA[Directors: Drector1 & Drector2]]></string>
+    <string name="new_toolbar_title">News</string>
 </resources>

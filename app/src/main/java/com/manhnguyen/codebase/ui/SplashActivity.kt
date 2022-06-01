@@ -1,10 +1,10 @@
 package com.manhnguyen.codebase.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.manhnguyen.codebase.R
-import com.manhnguyen.codebase.ui.map.MapsActivity
+import com.manhnguyen.codebase.ui.movie.NewsActivity
 import kotlinx.coroutines.delay
 
 class SplashActivity : AppCompatActivity() {
@@ -23,5 +23,5 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
-    private fun startMapsActivity() = startActivity(MapsActivity.newIntent(this))
+    private fun startMapsActivity() = startActivity(NewsActivity.newIntent(this))
 }

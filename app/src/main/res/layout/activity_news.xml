@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="showError"
+            type="Boolean" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/backgroundGrey1"
+        tools:context=".ui.movie.MovieActivity">
+
+        <include
+            android:id="@+id/mainToolbar"
+            layout="@layout/toolbar_layout"
+            app:title="@{title}" />
+
+        <FrameLayout
+            android:id="@+id/mainContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/movieNavigation"
+            android:layout_below="@id/mainToolbar"
+            android:fitsSystemWindows="true">
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_refresh_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_movie"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_5sdp"
+                    android:visibility="@{(!showError? View.VISIBLE : View.GONE)}" />
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+            <include
+                android:id="@+id/error_container"
+                layout="@layout/error_screen_layout"
+                android:visibility="@{(showError? View.VISIBLE : View.GONE)}" />
+
+            <com.manhnguyen.codebase.ui.progressbar.ProgressDialog
+                android:id="@+id/progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/movieNavigation"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            app:backgroundTint="@color/toolbar_background_color"
+            app:itemIconTint="@drawable/main_navigation_item_colors"
+            app:itemRippleColor="@color/googleYellowColor"
+            app:itemTextColor="@drawable/main_navigation_item_colors"
+            app:labelVisibilityMode="labeled"
+            app:menu="@menu/main_navigation_menu" />
+
+    </RelativeLayout>
+
+</layout>
